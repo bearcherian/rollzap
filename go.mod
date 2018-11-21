@@ -1,4 +1,4 @@
-module github.com/bearcherian/rollbarzapcore
+module github.com/bearcherian/rollzap
 
 require (
 	github.com/rollbar/rollbar-go v1.0.2

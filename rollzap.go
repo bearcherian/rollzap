@@ -1,4 +1,4 @@
-package rollbarzapcore
+package rollzap
 
 import (
 	rollbar "github.com/rollbar/rollbar-go"
@@ -9,16 +9,16 @@ type levelEnabler struct {
 	minLevel zapcore.Level
 }
 
-// RollbarZapCore is a custom core to send logs to Rollbar. Add the core using zapcore.NewTee
-type RollbarZapCore struct {
+// RollbarCore is a custom core to send logs to Rollbar. Add the core using zapcore.NewTee
+type RollbarCore struct {
 	levelEnabler
 	coreFields map[string]interface{}
 	minLevel   zapcore.Level
 }
 
-// NewRollbarZapCore creates a new core to transmit logs to rollbar. rollbar token and other options should be set before creating a new core
-func NewRollbarZapCore(minLevel zapcore.Level) *RollbarZapCore {
-	return &RollbarZapCore{
+// NewRollbarCore creates a new core to transmit logs to rollbar. rollbar token and other options should be set before creating a new core
+func NewRollbarCore(minLevel zapcore.Level) *RollbarCore {
+	return &RollbarCore{
 		minLevel:   minLevel,
 		coreFields: make(map[string]interface{}),
 	}
@@ -29,7 +29,7 @@ func (le *levelEnabler) Enabled(l zapcore.Level) bool {
 }
 
 // With provides structure
-func (c *RollbarZapCore) With(fields []zapcore.Field) zapcore.Core {
+func (c *RollbarCore) With(fields []zapcore.Field) zapcore.Core {
 
 	fieldMap := fieldsToMap(fields)
 
@@ -41,14 +41,14 @@ func (c *RollbarZapCore) With(fields []zapcore.Field) zapcore.Core {
 }
 
 // Check determines if this should be sent to roll bar based on LevelEnabler
-func (c *RollbarZapCore) Check(entry zapcore.Entry, checkedEntry *zapcore.CheckedEntry) *zapcore.CheckedEntry {
+func (c *RollbarCore) Check(entry zapcore.Entry, checkedEntry *zapcore.CheckedEntry) *zapcore.CheckedEntry {
 	if c.levelEnabler.Enabled(entry.Level) {
 		return checkedEntry.AddCore(entry, c)
 	}
 	return checkedEntry
 }
 
-func (c *RollbarZapCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
+func (c *RollbarCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
 
 	fieldMap := fieldsToMap(fields)
 	for k, v := range fieldMap {
@@ -70,7 +70,7 @@ func (c *RollbarZapCore) Write(entry zapcore.Entry, fields []zapcore.Field) erro
 }
 
 // Sync flushes
-func (c *RollbarZapCore) Sync() error {
+func (c *RollbarCore) Sync() error {
 	rollbar.Wait()
 	return nil
 }
