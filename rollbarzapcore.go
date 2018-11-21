@@ -12,22 +12,14 @@ type levelEnabler struct {
 // RollbarZapCore is a custom core to send logs to Rollbar. Add the core using zapcore.NewTee
 type RollbarZapCore struct {
 	levelEnabler
-	coreFields  map[string]interface{}
-	token       string
-	environment string
-	minLevel    zapcore.Level
+	coreFields map[string]interface{}
+	minLevel   zapcore.Level
 }
 
 // NewRollbarZapCore creates a new core to transmit logs to rollbar. rollbar token and other options should be set before creating a new core
 func NewRollbarZapCore(minLevel zapcore.Level) *RollbarZapCore {
 	return &RollbarZapCore{
-		minLevel: minLevel,
-	}
-}
-
-// NewRollbarCore creates a new RollbarZapCore
-func NewRollbarCore() *RollbarZapCore {
-	return &RollbarZapCore{
+		minLevel:   minLevel,
 		coreFields: make(map[string]interface{}),
 	}
 }
