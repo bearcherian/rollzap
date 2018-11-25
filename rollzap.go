@@ -1,6 +1,9 @@
 package rollzap
 
 import (
+	"encoding/json"
+	"log"
+
 	rollbar "github.com/rollbar/rollbar-go"
 	"go.uber.org/zap/zapcore"
 )
@@ -13,13 +16,15 @@ type levelEnabler struct {
 type RollbarCore struct {
 	levelEnabler
 	coreFields map[string]interface{}
-	minLevel   zapcore.Level
 }
 
 // NewRollbarCore creates a new core to transmit logs to rollbar. rollbar token and other options should be set before creating a new core
 func NewRollbarCore(minLevel zapcore.Level) *RollbarCore {
+
 	return &RollbarCore{
-		minLevel:   minLevel,
+		levelEnabler: levelEnabler{
+			minLevel: minLevel,
+		},
 		coreFields: make(map[string]interface{}),
 	}
 }
@@ -51,20 +56,31 @@ func (c *RollbarCore) Check(entry zapcore.Entry, checkedEntry *zapcore.CheckedEn
 func (c *RollbarCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
 
 	fieldMap := fieldsToMap(fields)
-	for k, v := range fieldMap {
-		c.coreFields[k] = v
-	}
 
-	c.coreFields["logger"] = entry.LoggerName
-	c.coreFields["file"] = entry.Caller.TrimmedPath()
+	if coreFieldsMap, err := json.Marshal(c.coreFields); err != nil {
+		log.Println("Unable to parse json for coreFields")
+	} else {
+		fieldMap["coreFields"] = coreFieldsMap
+	}
+	fieldMap["logger"] = entry.LoggerName
+	fieldMap["file"] = entry.Caller.TrimmedPath()
 
 	switch entry.Level {
-	case zapcore.ErrorLevel:
-		rollbar.Error(entry.Message, c.coreFields)
+	case zapcore.DebugLevel:
+		rollbar.Debug(entry.Message, fieldMap)
+	case zapcore.InfoLevel:
+		rollbar.Info(entry.Message, fieldMap)
 	case zapcore.WarnLevel:
-		rollbar.Warning(entry.Message, c.coreFields)
+		rollbar.Warning(entry.Message, fieldMap)
+	case zapcore.ErrorLevel:
+		rollbar.Error(entry.Message, fieldMap)
 	case zapcore.DPanicLevel:
-		rollbar.Critical(entry.Message, c.coreFields)
+		rollbar.Critical(entry.Message, fieldMap)
+	case zapcore.PanicLevel:
+		rollbar.Critical(entry.Message, fieldMap)
+	case zapcore.FatalLevel:
+		rollbar.Critical(entry.Message, fieldMap)
+
 	}
 	return nil
 }
