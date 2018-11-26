@@ -57,13 +57,20 @@ func (c *RollbarCore) Write(entry zapcore.Entry, fields []zapcore.Field) error {
 
 	fieldMap := fieldsToMap(fields)
 
-	if coreFieldsMap, err := json.Marshal(c.coreFields); err != nil {
-		log.Println("Unable to parse json for coreFields")
-	} else {
-		fieldMap["coreFields"] = coreFieldsMap
+	if len(c.coreFields) > 0 {
+		if coreFieldsMap, err := json.Marshal(c.coreFields); err != nil {
+			log.Println("Unable to parse json for coreFields")
+		} else {
+			fieldMap["coreFields"] = string(coreFieldsMap)
+		}
 	}
-	fieldMap["logger"] = entry.LoggerName
-	fieldMap["file"] = entry.Caller.TrimmedPath()
+
+	if entry.LoggerName != "" {
+		fieldMap["logger"] = entry.LoggerName
+	}
+	if entry.Caller.TrimmedPath() != "" {
+		fieldMap["file"] = entry.Caller.TrimmedPath()
+	}
 
 	switch entry.Level {
 	case zapcore.DebugLevel:
