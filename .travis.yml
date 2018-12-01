@@ -1,8 +1,8 @@
 language: go
 go:
-  - "1.10"
-  - "1.11"
-  - master
+- '1.10'
+- '1.11'
+- master
 env:
-  - GO111MODULE=on
+  secure: OYsiiowt7NWtnOY8Y+1Tojm+xRAhReGSjxJDVdpxkxGL3HQ1ybeuTknddd6xP87I/HsUzw8H2f6Trje/pHozuj7P16Zz0svBtS2iAZKa3PoGNhUx6F68bDHYoHFN3RSyUmijrqtA1XSObwebtBbbzVH7dhf7DmDAqDQlF5p4mKXCySonfsb6mZuMwwwtPPCBLJ7g5XEVIY9YCm4Vqp71/2/h+hc9dvOSC0RFIy/Wvp9erEurTwnJuzYidpS7sWu+Tif0Ba11JmxjvUVozU/qR4fOC2v71AlK80OZAFaKP8lGR5vZWOzOmOjt6ufLVDEc1BUYLKAm2zOA0yFq6RqgosZoVFlghWwT8v6mozMCLLVxU4u9I8PoNoJ8MfFuh4kSIyh7DvrLkujQiPwG44EmSAYuYF0NlwjXe6Wx26Uz8MDZsbyvD5c6Oiaq3hluPg7eZddEQmLWKUXJY0DLwgZZUcAJwnYssXmpC9v2Fl0aoDiXP4QdX5XDKDPpGUpsK0URrzQMmA/DZaU66ccRVO4bMTse6IqZs37ihdoo4UcnVcG+w8Ryfrz57UvHUf6HLIhDdii5J7x9fxy0woJxn+elzyNf9PZPYAUrpUR8XZW+gNEQfqGWkLRswp5uxtrRjVsM1h2mziHdfXRirYk5vulrjpw3qxuyut7S0wjEEmrv7pY=
 script: go test
