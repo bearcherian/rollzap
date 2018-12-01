@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/bearcherian/rollzap.svg?branch=master)](https://travis-ci.com/bearcherian/rollzap)
+
 # Rollbar Zap
 
 A simple zapcore.Core implementation to integrate with Rollbar. 
