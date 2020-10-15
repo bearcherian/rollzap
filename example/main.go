@@ -19,7 +19,7 @@ func main() {
 	logger, _ := zap.NewProduction()
 
 	// Wrap a NewTee to send log messages to both your main logger and to rollbar
-	logger.WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
+	logger = logger.WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
 		return zapcore.NewTee(core, rollbarCore)
 	}))
 
